@@ -17,6 +17,8 @@ const sheetNames = {
 const elements = {
   sourceStatus: document.querySelector("#source-status"),
   notice: document.querySelector("#data-notice"),
+  attackerResultRows: document.querySelector("#attacker-result-rows"),
+  defenderResultRows: document.querySelector("#defender-result-rows"),
   reload: document.querySelector("#reload-data"),
   attacker: document.querySelector("#attacker-select"),
   defender: document.querySelector("#defender-select"),
@@ -50,6 +52,8 @@ const elements = {
   abilityState: document.querySelector("#ability-state"),
   rolls: document.querySelector("#damage-rolls"),
   trace: document.querySelector("#calculation-trace"),
+  attackerMoveSlots: [...document.querySelectorAll(".attacker-move")],
+  defenderMoveSlots: [...document.querySelectorAll(".defender-move")],
 };
 
 let dataset = { monsters: [], moves: [], abilities: [], typeChart: {} };
@@ -114,6 +118,25 @@ function renderTrace(trace) {
   elements.trace.innerHTML = `<ul class="trace-list">${trace.map(([label, value]) => `<li><b>${escapeHtml(label)}</b><span>${escapeHtml(value)}</span></li>`).join("")}</ul>`;
 }
 
+function moveLabel(move) {
+  return move.category === "damage" ? `${move.type} · ${move.power} BP` : `${move.type} · Status`;
+}
+
+function renderMoveSlots() {
+  const renderMeta = (slot, side) => {
+    const move = selected(dataset.moves, slot);
+    const target = document.querySelector(`#${side}-move-meta-${slot.dataset.slot}`);
+    if (target) target.textContent = move ? moveLabel(move) : "—";
+    return move;
+  };
+  const renderRows = (slots, side, target) => {
+    const moves = slots.map((slot) => renderMeta(slot, side));
+    target.innerHTML = moves.map((move, index) => `<div class="result-row"><b>${index + 1}. ${escapeHtml(move?.name || "—")}</b><span>${escapeHtml(move ? moveLabel(move) : "—")}</span></div>`).join("");
+  };
+  renderRows(elements.attackerMoveSlots, "attacker", elements.attackerResultRows);
+  renderRows(elements.defenderMoveSlots, "defender", elements.defenderResultRows);
+}
+
 function renderCalculation() {
   const attacker = selected(dataset.monsters, elements.attacker);
   const defender = selected(dataset.monsters, elements.defender);
@@ -121,6 +144,7 @@ function renderCalculation() {
   if (!attacker || !defender || !move) return;
 
   renderPreviews(attacker, defender, move);
+  renderMoveSlots();
   elements.typeBoostWrap.hidden = elements.attackerItem.value !== "type-boost";
   const result = calculateDamage({
     attacker,
@@ -243,6 +267,14 @@ function setDataset(nextDataset, sourceLabel, notice = "") {
   setSelectOptions(elements.attacker, dataset.monsters, dataset.monsters.find((monster) => monster.name === "Murkit")?.id || dataset.monsters[0]?.id, (monster) => `${monster.name} · ${typeText(monster)}`);
   setSelectOptions(elements.defender, dataset.monsters, dataset.monsters.find((monster) => monster.name === "Glintail")?.id || dataset.monsters[1]?.id, (monster) => `${monster.name} · ${typeText(monster)}`);
   setSelectOptions(elements.move, dataset.moves, dataset.moves.find((move) => move.name === "Shade Claw")?.id || dataset.moves.find((move) => move.category === "damage")?.id, (move) => `${move.name} · ${move.type} · ${move.category === "damage" ? `${move.power} power` : "Support"}`);
+  const moveDefaults = ["Shade Claw", "Night Fang", "Body Slam", "Growl"];
+  for (const [index, slot] of elements.attackerMoveSlots.entries()) {
+    setSelectOptions(slot, dataset.moves, dataset.moves.find((move) => move.name === moveDefaults[index])?.id || dataset.moves[index]?.id, (move) => move.name);
+  }
+  for (const [index, slot] of elements.defenderMoveSlots.entries()) {
+    setSelectOptions(slot, dataset.moves, dataset.moves.find((move) => move.name === ["Dream Crush", "Glimmer", "Lullaby", "Growl"][index])?.id || dataset.moves[index]?.id, (move) => move.name);
+  }
+  if (elements.attackerMoveSlots[0]) elements.move.value = elements.attackerMoveSlots[0].value;
   setSelectOptions(elements.typeBoost, types.map((type) => ({ id: type, name: type })), types[0], (type) => type.name);
   elements.sourceStatus.textContent = sourceLabel;
   elements.notice.hidden = !notice;
@@ -270,7 +302,14 @@ async function loadData() {
 function listen() {
   fillStages();
   fillItems();
-  document.querySelectorAll("select, input").forEach((element) => element.addEventListener("input", renderCalculation));
+  document.querySelectorAll("select, input").forEach((element) => {
+    if (!element.classList.contains("move-slot")) element.addEventListener("input", renderCalculation);
+  });
+  elements.attackerMoveSlots.forEach((slot) => slot.addEventListener("input", () => {
+    elements.move.value = slot.value;
+    renderCalculation();
+  }));
+  elements.defenderMoveSlots.forEach((slot) => slot.addEventListener("input", renderCalculation));
   elements.reload.addEventListener("click", loadData);
 }
 
