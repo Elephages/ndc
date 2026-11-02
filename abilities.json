@@ -1,0 +1,110 @@
+[
+  {
+    "Id": "FlameBody",
+    "Name": "Flame Body",
+    "Kind": "Counter",
+    "Type": "",
+    "Status": "Burn",
+    "Chance": 0.3,
+    "Text": "Hitting it may burn the attacker."
+  },
+  {
+    "Id": "Intimidate",
+    "Name": "Intimidate",
+    "Kind": "Intimidate",
+    "Type": "",
+    "Status": "",
+    "Chance": "",
+    "Text": "Lowers the foe's Attack when it enters battle."
+  },
+  {
+    "Id": "Lanternheart",
+    "Name": "Lanternheart",
+    "Kind": "Surge",
+    "Type": "Psychic",
+    "Status": "",
+    "Chance": "",
+    "Text": "Psychic moves hit harder when it's at low HP."
+  },
+  {
+    "Id": "LastStand",
+    "Name": "Last Stand",
+    "Kind": "Surge",
+    "Type": "Fighting",
+    "Status": "",
+    "Chance": "",
+    "Text": "Fighting moves hit harder when it's at low HP."
+  },
+  {
+    "Id": "Limber",
+    "Name": "Limber",
+    "Kind": "Immune",
+    "Type": "",
+    "Status": "Paralysis",
+    "Chance": "",
+    "Text": "Can never be paralysed."
+  },
+  {
+    "Id": "PoisonPoint",
+    "Name": "Poison Point",
+    "Kind": "Counter",
+    "Type": "",
+    "Status": "Poison",
+    "Chance": 0.3,
+    "Text": "Hitting it may poison the attacker."
+  },
+  {
+    "Id": "QuickFeet",
+    "Name": "Quick Feet",
+    "Kind": "QuickFeet",
+    "Type": "",
+    "Status": "",
+    "Chance": "",
+    "Text": "Raises its Speed when it enters battle."
+  },
+  {
+    "Id": "Regrow",
+    "Name": "Regrow",
+    "Kind": "Regrow",
+    "Type": "",
+    "Status": "",
+    "Chance": "",
+    "Text": "Heals a little at the end of every turn."
+  },
+  {
+    "Id": "ShadowVeil",
+    "Name": "Shadow Veil",
+    "Kind": "Surge",
+    "Type": "Dark",
+    "Status": "",
+    "Chance": "",
+    "Text": "Dark moves hit harder when it's at low HP."
+  },
+  {
+    "Id": "Static",
+    "Name": "Static",
+    "Kind": "Counter",
+    "Type": "",
+    "Status": "Paralysis",
+    "Chance": 0.3,
+    "Text": "Hitting it may paralyse the attacker."
+  },
+  {
+    "Id": "Sturdy",
+    "Name": "Sturdy",
+    "Kind": "Sturdy",
+    "Type": "",
+    "Status": "",
+    "Chance": "",
+    "Text": "Can't be knocked out in one hit from full HP."
+  },
+  {
+    "Id": "Wakeful",
+    "Name": "Wakeful",
+    "Kind": "Immune",
+    "Type": "",
+    "Status": "Sleep",
+    "Chance": "",
+    "Text": "Can never fall asleep."
+  }
+]
