@@ -1,0 +1,36 @@
+[
+  {
+    "Id": "Glintail",
+    "Name": "Glintail",
+    "Type1": "Psychic",
+    "Type2": "",
+    "OldTypes": "Spirit",
+    "HP": 45,
+    "Attack": 49,
+    "Defense": 45,
+    "Speed": 60,
+    "Total": 199,
+    "CatchRate": 0.25,
+    "Rarity": "Starter",
+    "Ability": "Lanternheart",
+    "EvolvesTo": "Lumivane",
+    "EvolveLevel": 16
+  },
+  {
+    "Id": "Murkit",
+    "Name": "Murkit",
+    "Type1": "Dark",
+    "Type2": "",
+    "OldTypes": "Shadow",
+    "HP": 44,
+    "Attack": 56,
+    "Defense": 42,
+    "Speed": 62,
+    "Total": 204,
+    "CatchRate": 0.25,
+    "Rarity": "Starter",
+    "Ability": "Shadow Veil",
+    "EvolvesTo": "Gloomfang",
+    "EvolveLevel": 16
+  }
+]

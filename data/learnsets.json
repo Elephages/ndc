@@ -1,0 +1,1070 @@
+[
+  {
+    "Monster": "Glintail",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Glintail",
+    "Level": 1,
+    "MoveId": "Glimmer",
+    "MoveName": "Glimmer"
+  },
+  {
+    "Monster": "Glintail",
+    "Level": 5,
+    "MoveId": "Lullaby",
+    "MoveName": "Lullaby"
+  },
+  {
+    "Monster": "Glintail",
+    "Level": 8,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Glintail",
+    "Level": 10,
+    "MoveId": "LanternGlow",
+    "MoveName": "Lantern Glow"
+  },
+  {
+    "Monster": "Glintail",
+    "Level": 12,
+    "MoveId": "LanternBeam",
+    "MoveName": "Lantern Beam"
+  },
+  {
+    "Monster": "Lumivane",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Lumivane",
+    "Level": 1,
+    "MoveId": "Glimmer",
+    "MoveName": "Glimmer"
+  },
+  {
+    "Monster": "Lumivane",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Lumivane",
+    "Level": 10,
+    "MoveId": "LanternGlow",
+    "MoveName": "Lantern Glow"
+  },
+  {
+    "Monster": "Lumivane",
+    "Level": 16,
+    "MoveId": "LanternBeam",
+    "MoveName": "Lantern Beam"
+  },
+  {
+    "Monster": "Lumivane",
+    "Level": 22,
+    "MoveId": "PebbleToss",
+    "MoveName": "Pebble Toss"
+  },
+  {
+    "Monster": "Solarion",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Solarion",
+    "Level": 1,
+    "MoveId": "Glimmer",
+    "MoveName": "Glimmer"
+  },
+  {
+    "Monster": "Solarion",
+    "Level": 1,
+    "MoveId": "LanternBeam",
+    "MoveName": "Lantern Beam"
+  },
+  {
+    "Monster": "Solarion",
+    "Level": 36,
+    "MoveId": "RockSlam",
+    "MoveName": "Rock Slam"
+  },
+  {
+    "Monster": "Murkit",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Murkit",
+    "Level": 1,
+    "MoveId": "ShadeClaw",
+    "MoveName": "Shade Claw"
+  },
+  {
+    "Monster": "Murkit",
+    "Level": 5,
+    "MoveId": "DreadGlare",
+    "MoveName": "Dread Glare"
+  },
+  {
+    "Monster": "Murkit",
+    "Level": 8,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Murkit",
+    "Level": 10,
+    "MoveId": "ShadowDance",
+    "MoveName": "Shadow Dance"
+  },
+  {
+    "Monster": "Murkit",
+    "Level": 12,
+    "MoveId": "NightFang",
+    "MoveName": "Night Fang"
+  },
+  {
+    "Monster": "Gloomfang",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Gloomfang",
+    "Level": 1,
+    "MoveId": "ShadeClaw",
+    "MoveName": "Shade Claw"
+  },
+  {
+    "Monster": "Gloomfang",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Gloomfang",
+    "Level": 10,
+    "MoveId": "ShadowDance",
+    "MoveName": "Shadow Dance"
+  },
+  {
+    "Monster": "Gloomfang",
+    "Level": 16,
+    "MoveId": "NightFang",
+    "MoveName": "Night Fang"
+  },
+  {
+    "Monster": "Gloomfang",
+    "Level": 22,
+    "MoveId": "Glimmer",
+    "MoveName": "Glimmer"
+  },
+  {
+    "Monster": "Eclipsar",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Eclipsar",
+    "Level": 1,
+    "MoveId": "ShadeClaw",
+    "MoveName": "Shade Claw"
+  },
+  {
+    "Monster": "Eclipsar",
+    "Level": 1,
+    "MoveId": "NightFang",
+    "MoveName": "Night Fang"
+  },
+  {
+    "Monster": "Eclipsar",
+    "Level": 36,
+    "MoveId": "SparkBite",
+    "MoveName": "Spark Bite"
+  },
+  {
+    "Monster": "Puffwing",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Puffwing",
+    "Level": 1,
+    "MoveId": "QuickJab",
+    "MoveName": "Quick Jab"
+  },
+  {
+    "Monster": "Puffwing",
+    "Level": 5,
+    "MoveId": "FeatherDust",
+    "MoveName": "Feather Dust"
+  },
+  {
+    "Monster": "Puffwing",
+    "Level": 8,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Puffwing",
+    "Level": 10,
+    "MoveId": "Tailwind",
+    "MoveName": "Tailwind"
+  },
+  {
+    "Monster": "Puffwing",
+    "Level": 12,
+    "MoveId": "Haymaker",
+    "MoveName": "Haymaker"
+  },
+  {
+    "Monster": "Galecrest",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Galecrest",
+    "Level": 1,
+    "MoveId": "QuickJab",
+    "MoveName": "Quick Jab"
+  },
+  {
+    "Monster": "Galecrest",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Galecrest",
+    "Level": 10,
+    "MoveId": "Tailwind",
+    "MoveName": "Tailwind"
+  },
+  {
+    "Monster": "Galecrest",
+    "Level": 16,
+    "MoveId": "Haymaker",
+    "MoveName": "Haymaker"
+  },
+  {
+    "Monster": "Galecrest",
+    "Level": 22,
+    "MoveId": "Gust",
+    "MoveName": "Gust"
+  },
+  {
+    "Monster": "Tempestar",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Tempestar",
+    "Level": 1,
+    "MoveId": "QuickJab",
+    "MoveName": "Quick Jab"
+  },
+  {
+    "Monster": "Tempestar",
+    "Level": 1,
+    "MoveId": "Haymaker",
+    "MoveName": "Haymaker"
+  },
+  {
+    "Monster": "Tempestar",
+    "Level": 36,
+    "MoveId": "GaleWing",
+    "MoveName": "Gale Wing"
+  },
+  {
+    "Monster": "Sprigbun",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Sprigbun",
+    "Level": 1,
+    "MoveId": "LeafNip",
+    "MoveName": "Leaf Nip"
+  },
+  {
+    "Monster": "Sprigbun",
+    "Level": 4,
+    "MoveId": "Growl",
+    "MoveName": "Growl"
+  },
+  {
+    "Monster": "Sprigbun",
+    "Level": 7,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Sprigbun",
+    "Level": 9,
+    "MoveId": "SporeDust",
+    "MoveName": "Spore Dust"
+  },
+  {
+    "Monster": "Sprigbun",
+    "Level": 12,
+    "MoveId": "VineLash",
+    "MoveName": "Vine Lash"
+  },
+  {
+    "Monster": "Pebblin",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Pebblin",
+    "Level": 1,
+    "MoveId": "PebbleToss",
+    "MoveName": "Pebble Toss"
+  },
+  {
+    "Monster": "Pebblin",
+    "Level": 6,
+    "MoveId": "Harden",
+    "MoveName": "Harden"
+  },
+  {
+    "Monster": "Pebblin",
+    "Level": 10,
+    "MoveId": "RockSlam",
+    "MoveName": "Rock Slam"
+  },
+  {
+    "Monster": "Nibbit",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Nibbit",
+    "Level": 3,
+    "MoveId": "Growl",
+    "MoveName": "Growl"
+  },
+  {
+    "Monster": "Nibbit",
+    "Level": 5,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Nibbit",
+    "Level": 8,
+    "MoveId": "Howl",
+    "MoveName": "Howl"
+  },
+  {
+    "Monster": "Drizzlet",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Drizzlet",
+    "Level": 1,
+    "MoveId": "SplashShot",
+    "MoveName": "Splash Shot"
+  },
+  {
+    "Monster": "Drizzlet",
+    "Level": 11,
+    "MoveId": "BubbleJet",
+    "MoveName": "Bubble Jet"
+  },
+  {
+    "Monster": "Sparkmole",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Sparkmole",
+    "Level": 1,
+    "MoveId": "StaticJolt",
+    "MoveName": "Static Jolt"
+  },
+  {
+    "Monster": "Sparkmole",
+    "Level": 4,
+    "MoveId": "Glare",
+    "MoveName": "Glare"
+  },
+  {
+    "Monster": "Sparkmole",
+    "Level": 6,
+    "MoveId": "StaticWave",
+    "MoveName": "Static Wave"
+  },
+  {
+    "Monster": "Sparkmole",
+    "Level": 11,
+    "MoveId": "SparkBite",
+    "MoveName": "Spark Bite"
+  },
+  {
+    "Monster": "Embug",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Embug",
+    "Level": 1,
+    "MoveId": "EmberFlick",
+    "MoveName": "Ember Flick"
+  },
+  {
+    "Monster": "Embug",
+    "Level": 7,
+    "MoveId": "Smoulder",
+    "MoveName": "Smoulder"
+  },
+  {
+    "Monster": "Embug",
+    "Level": 11,
+    "MoveId": "FlameBurst",
+    "MoveName": "Flame Burst"
+  },
+  {
+    "Monster": "Mothbeam",
+    "Level": 1,
+    "MoveId": "Gust",
+    "MoveName": "Gust"
+  },
+  {
+    "Monster": "Mothbeam",
+    "Level": 1,
+    "MoveId": "Glimmer",
+    "MoveName": "Glimmer"
+  },
+  {
+    "Monster": "Mothbeam",
+    "Level": 1,
+    "MoveId": "Lullaby",
+    "MoveName": "Lullaby"
+  },
+  {
+    "Monster": "Mothbeam",
+    "Level": 10,
+    "MoveId": "LanternBeam",
+    "MoveName": "Lantern Beam"
+  },
+  {
+    "Monster": "Mothbeam",
+    "Level": 14,
+    "MoveId": "GaleWing",
+    "MoveName": "Gale Wing"
+  },
+  {
+    "Monster": "Thornhare",
+    "Level": 1,
+    "MoveId": "LeafNip",
+    "MoveName": "Leaf Nip"
+  },
+  {
+    "Monster": "Thornhare",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Thornhare",
+    "Level": 1,
+    "MoveId": "Growl",
+    "MoveName": "Growl"
+  },
+  {
+    "Monster": "Thornhare",
+    "Level": 18,
+    "MoveId": "VineLash",
+    "MoveName": "Vine Lash"
+  },
+  {
+    "Monster": "Thornhare",
+    "Level": 28,
+    "MoveId": "Wildgrowth",
+    "MoveName": "Wildgrowth"
+  },
+  {
+    "Monster": "Boulderhog",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Boulderhog",
+    "Level": 1,
+    "MoveId": "PebbleToss",
+    "MoveName": "Pebble Toss"
+  },
+  {
+    "Monster": "Boulderhog",
+    "Level": 1,
+    "MoveId": "Harden",
+    "MoveName": "Harden"
+  },
+  {
+    "Monster": "Boulderhog",
+    "Level": 16,
+    "MoveId": "RockSlam",
+    "MoveName": "Rock Slam"
+  },
+  {
+    "Monster": "Boulderhog",
+    "Level": 24,
+    "MoveId": "MetalClaw",
+    "MoveName": "Metal Claw"
+  },
+  {
+    "Monster": "Craglord",
+    "Level": 1,
+    "MoveId": "RockSlam",
+    "MoveName": "Rock Slam"
+  },
+  {
+    "Monster": "Craglord",
+    "Level": 1,
+    "MoveId": "MetalClaw",
+    "MoveName": "Metal Claw"
+  },
+  {
+    "Monster": "Craglord",
+    "Level": 1,
+    "MoveId": "Harden",
+    "MoveName": "Harden"
+  },
+  {
+    "Monster": "Craglord",
+    "Level": 34,
+    "MoveId": "IronBash",
+    "MoveName": "Iron Bash"
+  },
+  {
+    "Monster": "Craglord",
+    "Level": 42,
+    "MoveId": "IronGuard",
+    "MoveName": "Iron Guard"
+  },
+  {
+    "Monster": "Thundig",
+    "Level": 1,
+    "MoveId": "StaticJolt",
+    "MoveName": "Static Jolt"
+  },
+  {
+    "Monster": "Thundig",
+    "Level": 1,
+    "MoveId": "Glare",
+    "MoveName": "Glare"
+  },
+  {
+    "Monster": "Thundig",
+    "Level": 1,
+    "MoveId": "SparkBite",
+    "MoveName": "Spark Bite"
+  },
+  {
+    "Monster": "Thundig",
+    "Level": 18,
+    "MoveId": "StaticWave",
+    "MoveName": "Static Wave"
+  },
+  {
+    "Monster": "Thundig",
+    "Level": 30,
+    "MoveId": "Thunderhorn",
+    "MoveName": "Thunderhorn"
+  },
+  {
+    "Monster": "Torrentoad",
+    "Level": 1,
+    "MoveId": "SplashShot",
+    "MoveName": "Splash Shot"
+  },
+  {
+    "Monster": "Torrentoad",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Torrentoad",
+    "Level": 1,
+    "MoveId": "BubbleJet",
+    "MoveName": "Bubble Jet"
+  },
+  {
+    "Monster": "Torrentoad",
+    "Level": 26,
+    "MoveId": "BodySlam",
+    "MoveName": "Body Slam"
+  },
+  {
+    "Monster": "Slimmet",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Slimmet",
+    "Level": 1,
+    "MoveId": "VenomSpit",
+    "MoveName": "Venom Spit"
+  },
+  {
+    "Monster": "Slimmet",
+    "Level": 6,
+    "MoveId": "Harden",
+    "MoveName": "Harden"
+  },
+  {
+    "Monster": "Slimmet",
+    "Level": 10,
+    "MoveId": "ToxicFumes",
+    "MoveName": "Toxic Fumes"
+  },
+  {
+    "Monster": "Slimmet",
+    "Level": 15,
+    "MoveId": "SludgeBomb",
+    "MoveName": "Sludge Bomb"
+  },
+  {
+    "Monster": "Venomshell",
+    "Level": 1,
+    "MoveId": "VenomSpit",
+    "MoveName": "Venom Spit"
+  },
+  {
+    "Monster": "Venomshell",
+    "Level": 1,
+    "MoveId": "ToxicFumes",
+    "MoveName": "Toxic Fumes"
+  },
+  {
+    "Monster": "Venomshell",
+    "Level": 1,
+    "MoveId": "Harden",
+    "MoveName": "Harden"
+  },
+  {
+    "Monster": "Venomshell",
+    "Level": 20,
+    "MoveId": "SludgeBomb",
+    "MoveName": "Sludge Bomb"
+  },
+  {
+    "Monster": "Venomshell",
+    "Level": 30,
+    "MoveId": "IronGuard",
+    "MoveName": "Iron Guard"
+  },
+  {
+    "Monster": "Pyroflare",
+    "Level": 1,
+    "MoveId": "EmberFlick",
+    "MoveName": "Ember Flick"
+  },
+  {
+    "Monster": "Pyroflare",
+    "Level": 1,
+    "MoveId": "Smoulder",
+    "MoveName": "Smoulder"
+  },
+  {
+    "Monster": "Pyroflare",
+    "Level": 1,
+    "MoveId": "FlameBurst",
+    "MoveName": "Flame Burst"
+  },
+  {
+    "Monster": "Pyroflare",
+    "Level": 24,
+    "MoveId": "GaleWing",
+    "MoveName": "Gale Wing"
+  },
+  {
+    "Monster": "Cheekchamp",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Cheekchamp",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Cheekchamp",
+    "Level": 1,
+    "MoveId": "Howl",
+    "MoveName": "Howl"
+  },
+  {
+    "Monster": "Cheekchamp",
+    "Level": 15,
+    "MoveId": "BodySlam",
+    "MoveName": "Body Slam"
+  },
+  {
+    "Monster": "Clankle",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Clankle",
+    "Level": 1,
+    "MoveId": "MetalClaw",
+    "MoveName": "Metal Claw"
+  },
+  {
+    "Monster": "Clankle",
+    "Level": 7,
+    "MoveId": "IronGuard",
+    "MoveName": "Iron Guard"
+  },
+  {
+    "Monster": "Clankle",
+    "Level": 12,
+    "MoveId": "PebbleToss",
+    "MoveName": "Pebble Toss"
+  },
+  {
+    "Monster": "Clankle",
+    "Level": 16,
+    "MoveId": "IronBash",
+    "MoveName": "Iron Bash"
+  },
+  {
+    "Monster": "Rivetusk",
+    "Level": 1,
+    "MoveId": "MetalClaw",
+    "MoveName": "Metal Claw"
+  },
+  {
+    "Monster": "Rivetusk",
+    "Level": 1,
+    "MoveId": "IronGuard",
+    "MoveName": "Iron Guard"
+  },
+  {
+    "Monster": "Rivetusk",
+    "Level": 1,
+    "MoveId": "IronBash",
+    "MoveName": "Iron Bash"
+  },
+  {
+    "Monster": "Rivetusk",
+    "Level": 30,
+    "MoveId": "RockSlam",
+    "MoveName": "Rock Slam"
+  },
+  {
+    "Monster": "Chillpup",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Chillpup",
+    "Level": 1,
+    "MoveId": "FrostNip",
+    "MoveName": "Frost Nip"
+  },
+  {
+    "Monster": "Chillpup",
+    "Level": 6,
+    "MoveId": "Growl",
+    "MoveName": "Growl"
+  },
+  {
+    "Monster": "Chillpup",
+    "Level": 10,
+    "MoveId": "ChillWind",
+    "MoveName": "Chill Wind"
+  },
+  {
+    "Monster": "Chillpup",
+    "Level": 15,
+    "MoveId": "IcicleCrash",
+    "MoveName": "Icicle Crash"
+  },
+  {
+    "Monster": "Glacihound",
+    "Level": 1,
+    "MoveId": "FrostNip",
+    "MoveName": "Frost Nip"
+  },
+  {
+    "Monster": "Glacihound",
+    "Level": 1,
+    "MoveId": "ChillWind",
+    "MoveName": "Chill Wind"
+  },
+  {
+    "Monster": "Glacihound",
+    "Level": 1,
+    "MoveId": "IcicleCrash",
+    "MoveName": "Icicle Crash"
+  },
+  {
+    "Monster": "Glacihound",
+    "Level": 30,
+    "MoveId": "BodySlam",
+    "MoveName": "Body Slam"
+  },
+  {
+    "Monster": "Gemroo",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Gemroo",
+    "Level": 1,
+    "MoveId": "PebbleToss",
+    "MoveName": "Pebble Toss"
+  },
+  {
+    "Monster": "Gemroo",
+    "Level": 1,
+    "MoveId": "MetalClaw",
+    "MoveName": "Metal Claw"
+  },
+  {
+    "Monster": "Gemroo",
+    "Level": 12,
+    "MoveId": "RockSlam",
+    "MoveName": "Rock Slam"
+  },
+  {
+    "Monster": "Gemroo",
+    "Level": 18,
+    "MoveId": "IronBash",
+    "MoveName": "Iron Bash"
+  },
+  {
+    "Monster": "Myrewisp",
+    "Level": 1,
+    "MoveId": "ShadeClaw",
+    "MoveName": "Shade Claw"
+  },
+  {
+    "Monster": "Myrewisp",
+    "Level": 1,
+    "MoveId": "VenomSpit",
+    "MoveName": "Venom Spit"
+  },
+  {
+    "Monster": "Myrewisp",
+    "Level": 1,
+    "MoveId": "DreadGlare",
+    "MoveName": "Dread Glare"
+  },
+  {
+    "Monster": "Myrewisp",
+    "Level": 12,
+    "MoveId": "NightFang",
+    "MoveName": "Night Fang"
+  },
+  {
+    "Monster": "Myrewisp",
+    "Level": 18,
+    "MoveId": "SludgeBomb",
+    "MoveName": "Sludge Bomb"
+  },
+  {
+    "Monster": "Prismkit",
+    "Level": 1,
+    "MoveId": "Tackle",
+    "MoveName": "Tackle"
+  },
+  {
+    "Monster": "Prismkit",
+    "Level": 1,
+    "MoveId": "Growl",
+    "MoveName": "Growl"
+  },
+  {
+    "Monster": "Prismkit",
+    "Level": 6,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Prismkit",
+    "Level": 12,
+    "MoveId": "Howl",
+    "MoveName": "Howl"
+  },
+  {
+    "Monster": "Bloomkit",
+    "Level": 1,
+    "MoveId": "LeafNip",
+    "MoveName": "Leaf Nip"
+  },
+  {
+    "Monster": "Bloomkit",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Bloomkit",
+    "Level": 1,
+    "MoveId": "VineLash",
+    "MoveName": "Vine Lash"
+  },
+  {
+    "Monster": "Bloomkit",
+    "Level": 30,
+    "MoveId": "Wildgrowth",
+    "MoveName": "Wildgrowth"
+  },
+  {
+    "Monster": "Voltkit",
+    "Level": 1,
+    "MoveId": "StaticJolt",
+    "MoveName": "Static Jolt"
+  },
+  {
+    "Monster": "Voltkit",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Voltkit",
+    "Level": 1,
+    "MoveId": "SparkBite",
+    "MoveName": "Spark Bite"
+  },
+  {
+    "Monster": "Voltkit",
+    "Level": 30,
+    "MoveId": "Thunderhorn",
+    "MoveName": "Thunderhorn"
+  },
+  {
+    "Monster": "Tidekit",
+    "Level": 1,
+    "MoveId": "SplashShot",
+    "MoveName": "Splash Shot"
+  },
+  {
+    "Monster": "Tidekit",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Tidekit",
+    "Level": 1,
+    "MoveId": "BubbleJet",
+    "MoveName": "Bubble Jet"
+  },
+  {
+    "Monster": "Tidekit",
+    "Level": 30,
+    "MoveId": "BodySlam",
+    "MoveName": "Body Slam"
+  },
+  {
+    "Monster": "Emberkit",
+    "Level": 1,
+    "MoveId": "EmberFlick",
+    "MoveName": "Ember Flick"
+  },
+  {
+    "Monster": "Emberkit",
+    "Level": 1,
+    "MoveId": "Pounce",
+    "MoveName": "Pounce"
+  },
+  {
+    "Monster": "Emberkit",
+    "Level": 1,
+    "MoveId": "FlameBurst",
+    "MoveName": "Flame Burst"
+  },
+  {
+    "Monster": "Emberkit",
+    "Level": 30,
+    "MoveId": "BodySlam",
+    "MoveName": "Body Slam"
+  },
+  {
+    "Monster": "Verdaros",
+    "Level": 1,
+    "MoveId": "VineLash",
+    "MoveName": "Vine Lash"
+  },
+  {
+    "Monster": "Verdaros",
+    "Level": 1,
+    "MoveId": "SparkBite",
+    "MoveName": "Spark Bite"
+  },
+  {
+    "Monster": "Verdaros",
+    "Level": 1,
+    "MoveId": "Howl",
+    "MoveName": "Howl"
+  },
+  {
+    "Monster": "Verdaros",
+    "Level": 1,
+    "MoveId": "Thunderhorn",
+    "MoveName": "Thunderhorn"
+  },
+  {
+    "Monster": "Verdaros",
+    "Level": 40,
+    "MoveId": "Wildgrowth",
+    "MoveName": "Wildgrowth"
+  },
+  {
+    "Monster": "Somnaros",
+    "Level": 1,
+    "MoveId": "LanternBeam",
+    "MoveName": "Lantern Beam"
+  },
+  {
+    "Monster": "Somnaros",
+    "Level": 1,
+    "MoveId": "RockSlam",
+    "MoveName": "Rock Slam"
+  },
+  {
+    "Monster": "Somnaros",
+    "Level": 1,
+    "MoveId": "Lullaby",
+    "MoveName": "Lullaby"
+  },
+  {
+    "Monster": "Somnaros",
+    "Level": 1,
+    "MoveId": "DreamCrush",
+    "MoveName": "Dream Crush"
+  }
+]
