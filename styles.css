@@ -48,7 +48,6 @@ code { padding: 1px 5px; background: var(--fill); border-radius: 5px; }
 .brand h1 span { color: var(--on-bg-2); font-weight: 400; }
 .topbar-source { color: var(--on-bg-2); font-size: 12px; text-align: right; }
 .page { width: min(1120px, 100%); margin: 0 auto; padding: 0 24px 24px; }
-.footer { padding: 8px 24px 28px; color: var(--on-bg-2); font-size: 12px; text-align: center; }
 .boot { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 90px 16px; color: var(--on-bg); }
 .spinner { width: 15px; height: 15px; border: 2px solid var(--line-strong); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
