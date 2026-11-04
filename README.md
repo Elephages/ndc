@@ -18,9 +18,15 @@ This is a calculator only. It doesn't simulate battles.
 
 The calculator treats `Damage` and `Attack` as damage-move categories, and `Status` and `Support` as support-move categories. Support moves stay selectable but deal no direct damage.
 
+### Starting state
+
+Everything starts blank each time the page opens: no Novalings, and abilities, items, status and moves all set to None. A blank IV counts as 15, as its placeholder shows.
+
+Levels work as on the Pokémon Showdown calculator. **Level 100**, **Level 50** and **Level 5** set both Novalings at once, and **Custom** does the same for any level from 1 to 100. Each Novaling also has its own Level box that can be edited at any time, even before a Novaling is chosen. The default is Level 50. Choosing a Novaling doesn't fill anything in, and changing Novaling puts its moves, ability and item back to None. Its usual ability is marked in the Ability dropdown for you to pick.
+
 ### Editing values for balance testing
 
-Base stats, types, abilities, and each move's power and type can all be changed in place. Edited values are highlighted in orange. They are saved in your browser and go back to the data's values when you change Novaling, reset, or type the original number.
+Base stats, types, abilities, and each move's power and type can all be changed in place. Edited base stats and move power are shown in bold. They go back to the data's values when you change Novaling, clear the box, or type the original number.
 
 ### What is deliberately not here
 
@@ -59,7 +65,7 @@ npm run build:data
 |---|---|
 | `core.js` | The rules: stats, damage formula, KO analysis, items, status immunity |
 | `app.js` | Calculator state and rendering |
-| `combobox.js` | The searchable dropdown |
+| `picker.js` | The dropdown with its own search bar |
 | `data-source.js` | Loads bundled data or the Google Sheet |
 | `styles.css` | Design system and layout |
 

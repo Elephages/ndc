@@ -84,7 +84,7 @@ export const ITEMS = [
   { id: "eviolite", name: "Eviolite Style", text: "Defense ×1.5 while it can still evolve." },
 ];
 
-export const STATUSES = { none: "Healthy", burn: "Burned", paralysis: "Paralysed", poison: "Poisoned", sleep: "Asleep" };
+export const STATUSES = { none: "None", burn: "Burned", paralysis: "Paralysed", poison: "Poisoned", sleep: "Asleep" };
 
 const STATUS_TYPE_IMMUNITY = { burn: ["Fire"], paralysis: ["Electric"], poison: ["Poison", "Steel"], sleep: [] };
 
