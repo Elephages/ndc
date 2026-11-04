@@ -73,11 +73,7 @@ npm run build:data
 
 The Sheet is the calculator's data. The site reads it each time the page is opened, so there's nothing to redeploy and no commit to make: save a change in the Sheet, refresh the site, and it's live. The repo's `data/` files are only a fallback for when the Sheet can't be read.
 
-To set it up:
-
-1. Upload `sheet/Novalings Backend.xlsx` to Google Drive and open it with Google Sheets, then choose **File → Save as Google Sheets**.
-2. Choose **Share → General access → Anyone with the link → Viewer**. The site can't read the Sheet otherwise. Only people you add as editors can change it.
-3. Copy the ID from the Sheet's URL into `googleSheetId` in `config.js`, then push.
+To connect a Sheet, share it as **Anyone with the link → Viewer**, then copy the ID from its URL into `googleSheetId` in `config.js`.
 
 The **Start Here** tab explains day-to-day use. In short, add a row, and set **Ready** to **Yes** when it's complete. Rows that aren't ready stay off the site. Tabs and headers must keep their names:
 
@@ -87,7 +83,7 @@ The **Start Here** tab explains day-to-day use. In short, add a row, and set **R
 - `Type Chart`: attack types as the first column and defending types as the remaining headers. A blank cell counts as neutral.
 - `Learnsets`: `Monster`, `Level`, `Move`. If this tab is missing, the bundled learnsets are used.
 
-If the Sheet can't be read, the calculator shows a warning and uses the bundled data. To rebuild the template from `data/`, run `python3 scripts/build-sheet.py` (needs `openpyxl`).
+If the Sheet can't be read, the calculator shows a warning and uses the bundled data.
 
 ## GitHub Pages
 

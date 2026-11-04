@@ -87,24 +87,24 @@ async function googleSheetData() {
   };
 }
 
-function finish(raw, label, notice, warning) {
+function finish(raw, label, warning = "") {
   const dataset = {
     ...raw,
     monsters: [...raw.monsters].sort((left, right) => left.name.localeCompare(right.name)),
     moves: [...raw.moves].sort((left, right) => left.name.localeCompare(right.name)),
     types: Object.keys(raw.typeChart).sort(),
   };
-  return { dataset, label: `${label} · ${dataset.monsters.length} Novalings · ${dataset.moves.length} moves`, notice, warning };
+  return { dataset, label: `${label} · ${dataset.monsters.length} Novalings · ${dataset.moves.length} moves`, warning };
 }
 
 // Rejects only if no data can be read at all.
 export async function loadDataset() {
   if (config.googleSheetId) {
     try {
-      return finish(await googleSheetData(), "Live Google Sheet", "", "");
+      return finish(await googleSheetData(), "Live Google Sheet");
     } catch {
-      return finish(await bundledData(), "Bundled data", "", "The configured Google Sheet could not be read. Check that it is shared for public viewing, then reload. Bundled prototype data is shown instead.");
+      return finish(await bundledData(), "Bundled data", "The configured Google Sheet could not be read. Check that it is shared for public viewing, then reload. Bundled prototype data is shown instead.");
     }
   }
-  return finish(await bundledData(), "Bundled data", "Add a Sheet ID to config.js to read live data from Google Sheets.", "");
+  return finish(await bundledData(), "Bundled data");
 }

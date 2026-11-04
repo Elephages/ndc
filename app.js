@@ -104,10 +104,6 @@ function speciesOf(side) {
   return monsterById(side.species);
 }
 
-function levelOf(side) {
-  return side.level;
-}
-
 function ivOf(side, key) {
   return side.ivs[key] ?? DEFAULT_IV;
 }
@@ -145,7 +141,7 @@ function battler(side) {
 }
 
 function maxHpOf(side) {
-  return calculateStat(baseStat(side, "hp"), ivOf(side, "hp"), levelOf(side), true);
+  return calculateStat(baseStat(side, "hp"), ivOf(side, "hp"), side.level, true);
 }
 
 function currentHpOf(side) {
@@ -153,7 +149,7 @@ function currentHpOf(side) {
 }
 
 function rawStat(side, key) {
-  return calculateStat(baseStat(side, key), ivOf(side, key), levelOf(side), key === "hp");
+  return calculateStat(baseStat(side, key), ivOf(side, key), side.level, key === "hp");
 }
 
 function effectiveStage(index, stat) {
@@ -194,10 +190,9 @@ function compute(attackerIndex, slotIndex) {
     move,
     abilities: dataset.abilities,
     typeChart: dataset.typeChart,
-    attackerLevel: levelOf(attackerSide),
-    defenderLevel: levelOf(defenderSide),
+    attackerLevel: attackerSide.level,
+    defenderLevel: defenderSide.level,
     attackerAttackIv: ivOf(attackerSide, "attack"),
-    attackerHpIv: ivOf(attackerSide, "hp"),
     defenderDefenseIv: ivOf(defenderSide, "defense"),
     defenderHpIv: ivOf(defenderSide, "hp"),
     attackerStage,
@@ -252,7 +247,7 @@ function calculationLine(entry) {
   const usedDefense = result.ignoresDefenseBoost ? 0 : defenderStage;
   const attackerParts = [
     usedAttack ? signed(usedAttack) : "",
-    `Lv ${levelOf(attackerSide)}`,
+    `Lv ${attackerSide.level}`,
     `${ivOf(attackerSide, "attack")} IV Atk`,
     attackerSide.status === "burn" ? "burned" : "",
     result.itemMultiplier > 1 || attackerSide.item === "choice-attack" ? itemName(attackerSide.item) : "",
@@ -263,7 +258,7 @@ function calculationLine(entry) {
   const defenderItem = defenderSide.item === "vest" || (defenderSide.item === "eviolite" && speciesOf(defenderSide).evolvesTo) ? itemName(defenderSide.item) : "";
   const defenderParts = [
     usedDefense ? signed(usedDefense) : "",
-    `Lv ${levelOf(defenderSide)}`,
+    `Lv ${defenderSide.level}`,
     `${ivOf(defenderSide, "hp")} IV HP / ${ivOf(defenderSide, "defense")} IV Def`,
     defenderItem,
     defender,
@@ -347,7 +342,7 @@ function statusOptions(side) {
 }
 
 function moveOptions(side) {
-  const learnset = side.species ? legalMoves(side.species, levelOf(side)) : [];
+  const learnset = side.species ? legalMoves(side.species, side.level) : [];
   const learnableIds = new Set(learnset.map((entry) => entry.move.id));
   const row = (move, section, note) => ({
     value: move.id,
@@ -503,7 +498,7 @@ function buildPanel(index) {
   const side = () => state.sides[index];
   const mount = (name, options) => {
     const picker = new Picker(options);
-    root.querySelector(`[data-mount="${name}"]`).append(picker.root);
+    root.querySelector(`[data-mount="${name}"]`).append(picker.button);
     return picker;
   };
 
@@ -785,7 +780,7 @@ function renderPanel(index, forceInputs, computed) {
       const critBox = field(`move.${slotIndex}.crit`);
       critBox.disabled = !canHit;
       setInput(critBox, slot.crit, forceInputs);
-      const learnset = side.species ? legalMoves(side.species, levelOf(side)).find((learned) => learned.move.id === move.id) : null;
+      const learnset = side.species ? legalMoves(side.species, side.level).find((learned) => learned.move.id === move.id) : null;
       const legality = !side.species || move.id === STRUGGLE.id ? "" : !learnset ? " · Not in learnset" : !learnset.learned ? ` · Learned at Lv ${learnset.level}` : "";
       const blocked = side.item === "vest" && !canHit ? " · Blocked by Vest in battle" : "";
       row.querySelector(".move-info").textContent = `${moveInfo(move)}${blocked}${legality}`;

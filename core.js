@@ -34,7 +34,6 @@ export function normalizeMonster(record) {
     speed: number(record.Speed ?? record.speed),
     ability: record.Ability || record.ability || "",
     evolvesTo: record.EvolvesTo || record.evolvesTo || "",
-    evolveLevel: number(record.EvolveLevel ?? record.evolveLevel),
     rarity: record.Rarity || record.rarity || "",
   };
 }
@@ -109,11 +108,11 @@ export function stageMultiplier(stage) {
   return currentStage >= 0 ? (2 + currentStage) / 2 : 2 / (2 - currentStage);
 }
 
-export function applyStage(stat, stage) {
+function applyStage(stat, stage) {
   return Math.floor(number(stat) * stageMultiplier(stage));
 }
 
-export function getTypeMultiplier(typeChart, attackType, defenderType1, defenderType2 = "") {
+function getTypeMultiplier(typeChart, attackType, defenderType1, defenderType2 = "") {
   const row = typeChart?.[attackType] || typeChart?.[String(attackType).trim()] || {};
   const first = number(row?.[defenderType1], 1);
   const second = defenderType2 ? number(row?.[defenderType2], 1) : 1;
@@ -143,7 +142,7 @@ export function effectiveSpeed(speed, { stage = 0, paralysed = false, item = "no
   return result;
 }
 
-export function endOfTurnDamage(status, maxHp) {
+function endOfTurnDamage(status, maxHp) {
   if (status === "burn") return Math.max(1, Math.floor(maxHp / 16));
   if (status === "poison") return Math.max(1, Math.floor(maxHp / 8));
   return 0;
@@ -216,7 +215,6 @@ export function calculateDamage(input) {
     attackerLevel = 50,
     defenderLevel = 50,
     attackerAttackIv = 15,
-    attackerHpIv = 15,
     defenderDefenseIv = 15,
     defenderHpIv = 15,
     attackerStage = 0,

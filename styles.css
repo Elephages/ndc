@@ -44,7 +44,6 @@ code { padding: 1px 5px; background: var(--fill); border-radius: 5px; }
 /* Header */
 .topbar { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; width: min(1120px, 100%); margin: 0 auto; padding: 22px 24px 14px; }
 .brand { display: flex; align-items: baseline; }
-.brand-mark { display: none; }
 .brand h1 { color: var(--on-bg); font-size: 21px; font-weight: 800; }
 .brand h1 span { color: var(--on-bg-2); font-weight: 400; }
 .topbar-source { color: var(--on-bg-2); font-size: 12px; text-align: right; }

@@ -33,7 +33,6 @@ export class Picker {
     this.button.setAttribute("aria-label", label);
     this.button.innerHTML = `<span class="picker-value"></span><span class="picker-chevron" aria-hidden="true"></span>`;
     this.valueEl = this.button.querySelector(".picker-value");
-    this.root = this.button;
 
     this.panel = document.createElement("div");
     this.panel.className = "picker-panel";
