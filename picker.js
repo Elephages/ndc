@@ -15,8 +15,9 @@ document.addEventListener("pointerdown", (event) => {
 });
 
 export class Picker {
-  constructor({ label, placeholder = "None", searchable = true, onSelect }) {
+  constructor({ label, placeholder = "None", searchable = true, onSelect, onAction }) {
     this.onSelect = onSelect;
+    this.onAction = onAction;
     this.placeholder = placeholder;
     this.searchable = searchable;
     this.options = [];
@@ -53,7 +54,13 @@ export class Picker {
     this.search?.addEventListener("input", () => this.filter(this.search.value));
     this.list.addEventListener("click", (event) => {
       const row = event.target.closest("[data-index]");
-      if (row) this.choose(this.visible[Number(row.dataset.index)]);
+      if (!row) return;
+      const option = this.visible[Number(row.dataset.index)];
+      const action = event.target.closest("[data-option-action]")?.dataset.optionAction;
+      if (action) {
+        this.close({ refocus: true });
+        this.onAction?.(action, option.value);
+      } else this.choose(option);
     });
     this.reposition = (event) => {
       if (!this.panel.contains(event?.target)) this.place();
@@ -179,6 +186,7 @@ export class Picker {
       event.preventDefault();
       this.step(event.key === "ArrowDown" ? 1 : -1);
     } else if (event.key === "Enter") {
+      if (event.target.closest("button")) return;
       event.preventDefault();
       this.choose(this.visible[this.activeIndex]);
     } else if (event.key === "Escape") {
@@ -186,7 +194,13 @@ export class Picker {
       event.stopPropagation();
       this.close({ refocus: true });
     } else if (event.key === "Tab") {
-      this.close({ refocus: true });
+      // Tab walks through any buttons inside the rows before leaving the panel.
+      const stops = [...this.list.querySelectorAll("button")];
+      const next = stops[stops.indexOf(event.target) + (event.shiftKey ? -1 : 1)];
+      if (next) {
+        event.preventDefault();
+        next.focus();
+      } else this.close({ refocus: true });
     }
   }
 }

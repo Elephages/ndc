@@ -98,8 +98,16 @@ export function statusBlockReason(status, types, ability) {
 // The pack gives Struggle no power, so 50 is an assumption; it can be edited per move slot.
 export const STRUGGLE = { id: "Struggle", name: "Struggle", type: "", category: "damage", power: 50, accuracy: 100, pp: 0, effect: "Typeless, always hits for ×1. Used when every move is out of PP." };
 
-export function calculateStat(base, iv, level, isHp = false) {
-  const core = Math.floor(((2 * number(base) + number(iv)) * number(level)) / 100);
+export const STAT_KEYS = ["hp", "attack", "defense", "speed"];
+export const STAT_SHORT = { hp: "HP", attack: "Atk", defense: "Def", speed: "Spe" };
+export const DEFAULT_IV = 15;
+export const MAX_IV = 31;
+export const MAX_STAT_EV = 252;
+export const MAX_TOTAL_EV = 510;
+
+// The modern Pokémon stat formula with no nature term, because Novalings have no natures.
+export function calculateStat(base, iv, level, isHp = false, ev = 0) {
+  const core = Math.floor(((2 * number(base) + number(iv) + Math.floor(number(ev) / 4)) * number(level)) / 100);
   return core + (isHp ? number(level) + 10 : 5);
 }
 
@@ -217,6 +225,9 @@ export function calculateDamage(input) {
     attackerAttackIv = 15,
     defenderDefenseIv = 15,
     defenderHpIv = 15,
+    attackerAttackEv = 0,
+    defenderDefenseEv = 0,
+    defenderHpEv = 0,
     attackerStage = 0,
     defenderStage = 0,
     critical = false,
@@ -237,8 +248,8 @@ export function calculateDamage(input) {
   const ignoresDefenseBoost = critical && number(defenderStage) > 0;
   const usedAttackStage = ignoresAttackDrop ? 0 : number(attackerStage);
   const usedDefenseStage = ignoresDefenseBoost ? 0 : number(defenderStage);
-  const rawAttack = calculateStat(attacker.attack, attackerAttackIv, attackerLevel);
-  const rawDefense = calculateStat(defender.defense, defenderDefenseIv, defenderLevel);
+  const rawAttack = calculateStat(attacker.attack, attackerAttackIv, attackerLevel, false, attackerAttackEv);
+  const rawDefense = calculateStat(defender.defense, defenderDefenseIv, defenderLevel, false, defenderDefenseEv);
   const attack = offensiveStat(rawAttack, usedAttackStage, attackerItem);
   const defense = defensiveStat(rawDefense, usedDefenseStage, defenderItem, Boolean(defender.evolvesTo));
 
@@ -254,7 +265,7 @@ export function calculateDamage(input) {
   const itemMultiplier = damageItemMultiplier(attackerItem, move, typeBoost);
   // Rounded because 1.5 * 1.2 is 1.7999999999999998 in floating point, which would lose a point of damage.
   const boostMultiplier = Math.round((surgeActive ? 1.5 : 1) * itemMultiplier * 1000) / 1000;
-  const defenderHp = calculateStat(defender.hp, defenderHpIv, defenderLevel, true);
+  const defenderHp = calculateStat(defender.hp, defenderHpIv, defenderLevel, true, defenderHpEv);
 
   if (typeMultiplier === 0) {
     return {

@@ -2,13 +2,18 @@ import {
   analyzeKo,
   calculateDamage,
   calculateStat,
+  DEFAULT_IV,
   defensiveStat,
   effectiveSpeed,
   findAbility,
   formatChance,
   ITEMS,
+  MAX_STAT_EV,
+  MAX_TOTAL_EV,
   normalizeKey,
   offensiveStat,
+  STAT_KEYS,
+  STAT_SHORT,
   stageMultiplier,
   STATUSES,
   statusBlockReason,
@@ -16,22 +21,21 @@ import {
 } from "./core.js";
 import { loadDataset } from "./data-source.js";
 import { Picker } from "./picker.js";
+import { evRoom, evTotal, findSavedSet, formatSet, isSavedSetsKey, parseSet, readSavedSets, setsForSpecies, writeSavedSets } from "./sets.js";
 
 const TYPE_COLORS = {
   Normal: "#78716c", Fire: "#dc5a2b", Water: "#2f7fd6", Electric: "#b98a00", Grass: "#3f9142", Ice: "#2a9aa5",
   Fighting: "#b8432f", Poison: "#8d4bb0", Ground: "#a97f3c", Flying: "#5f7fd8", Psychic: "#d4487f", Bug: "#7c9414",
   Rock: "#8f7d45", Ghost: "#65559a", Dragon: "#5a4bd8", Dark: "#574f63", Steel: "#64788c", Fairy: "#c95f9d",
 };
-const STAT_KEYS = ["hp", "attack", "defense", "speed"];
 const STAT_LABELS = { hp: "HP", attack: "Attack", defense: "Defense", speed: "Speed" };
-const STAT_SHORT = { hp: "HP", attack: "Atk", defense: "Def", speed: "Spe" };
 const STAGE_OPTIONS = Array.from({ length: 13 }, (_, step) => {
   const value = 6 - step;
   return { value: String(value), label: value === 0 ? "—" : value > 0 ? `+${value}` : `${value}`, empty: value === 0 };
 });
-const DEFAULT_IV = 15;
-const DEFAULT_LEVEL = 50;
+const DEFAULT_LEVEL = 100;
 const LEVEL_PRESETS = [100, 50, 5];
+const IO_MESSAGE_MS = 2000;
 
 const app = document.querySelector("#app");
 const sourceStatus = document.querySelector("#source-status");
@@ -42,7 +46,17 @@ let state = null;
 let panels = [];
 let refs = {};
 let mobileView = "0";
-let customLevelOpen = false;
+let ioStatus = null;
+let ioStatusTimer = 0;
+let savedSets = [];
+
+function browserStorage() {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
@@ -75,7 +89,7 @@ function newMoveSlot(id = "") {
 }
 
 // Everything starts blank except the level, which always shows a number as on Showdown.
-// A blank IV counts as the default shown in its placeholder.
+// A blank IV counts as the default shown in its placeholder, and a blank EV as 0.
 function newSide(level = DEFAULT_LEVEL) {
   return {
     species: "",
@@ -84,6 +98,8 @@ function newSide(level = DEFAULT_LEVEL) {
     types: null,
     ability: "",
     ivs: { hp: null, attack: null, defense: null, speed: null },
+    evs: { hp: null, attack: null, defense: null, speed: null },
+    setName: "",
     boosts: { attack: 0, defense: 0, speed: 0 },
     item: "none",
     typeBoost: "",
@@ -106,6 +122,10 @@ function speciesOf(side) {
 
 function ivOf(side, key) {
   return side.ivs[key] ?? DEFAULT_IV;
+}
+
+function evOf(side, key) {
+  return side.evs[key] ?? 0;
 }
 
 function typesOf(side) {
@@ -141,7 +161,7 @@ function battler(side) {
 }
 
 function maxHpOf(side) {
-  return calculateStat(baseStat(side, "hp"), ivOf(side, "hp"), side.level, true);
+  return calculateStat(baseStat(side, "hp"), ivOf(side, "hp"), side.level, true, evOf(side, "hp"));
 }
 
 function currentHpOf(side) {
@@ -149,7 +169,7 @@ function currentHpOf(side) {
 }
 
 function rawStat(side, key) {
-  return calculateStat(baseStat(side, key), ivOf(side, key), side.level, key === "hp");
+  return calculateStat(baseStat(side, key), ivOf(side, key), side.level, key === "hp", evOf(side, key));
 }
 
 function effectiveStage(index, stat) {
@@ -195,6 +215,9 @@ function compute(attackerIndex, slotIndex) {
     attackerAttackIv: ivOf(attackerSide, "attack"),
     defenderDefenseIv: ivOf(defenderSide, "defense"),
     defenderHpIv: ivOf(defenderSide, "hp"),
+    attackerAttackEv: evOf(attackerSide, "attack"),
+    defenderDefenseEv: evOf(defenderSide, "defense"),
+    defenderHpEv: evOf(defenderSide, "hp"),
     attackerStage,
     defenderStage,
     critical: slot.crit,
@@ -236,6 +259,11 @@ function itemName(id) {
   return ITEMS.find((item) => item.id === id)?.name || "";
 }
 
+function investedLabel(side, key) {
+  const ev = evOf(side, key);
+  return `${ivOf(side, key)} IV${ev ? ` ${ev} EV` : ""} ${STAT_SHORT[key]}`;
+}
+
 function calculationLine(entry) {
   const { move, slot, result, attackerStage, defenderStage, attackerIndex } = entry;
   const attackerSide = state.sides[attackerIndex];
@@ -248,7 +276,7 @@ function calculationLine(entry) {
   const attackerParts = [
     usedAttack ? signed(usedAttack) : "",
     `Lv ${attackerSide.level}`,
-    `${ivOf(attackerSide, "attack")} IV Atk`,
+    investedLabel(attackerSide, "attack"),
     attackerSide.status === "burn" ? "burned" : "",
     result.itemMultiplier > 1 || attackerSide.item === "choice-attack" ? itemName(attackerSide.item) : "",
     result.surgeActive ? abilityOf(attackerSide).name : "",
@@ -259,7 +287,7 @@ function calculationLine(entry) {
   const defenderParts = [
     usedDefense ? signed(usedDefense) : "",
     `Lv ${defenderSide.level}`,
-    `${ivOf(defenderSide, "hp")} IV HP / ${ivOf(defenderSide, "defense")} IV Def`,
+    `${investedLabel(defenderSide, "hp")} / ${investedLabel(defenderSide, "defense")}`,
     defenderItem,
     defender,
   ].filter(Boolean).join(" ");
@@ -358,12 +386,40 @@ function moveOptions(side) {
   ];
 }
 
+function setSummary(text) {
+  const lines = text.split("\n");
+  const item = lines[0].split(" @ ")[1];
+  const level = lines.find((line) => line.startsWith("Level: "))?.slice(7);
+  const evs = lines.find((line) => line.startsWith("EVs: "))?.slice(5);
+  return [`Lv ${level}`, item, evs].filter(Boolean).join(" · ");
+}
+
+function savedSetsOf(side) {
+  const monster = speciesOf(side);
+  return monster ? setsForSpecies(savedSets, monster.name) : [];
+}
+
+function savedSetOptions(side) {
+  const saved = savedSetsOf(side);
+  const rows = saved.map((entry) => ({
+    value: entry.name,
+    label: entry.name === side.setName && entry.text !== formatSet(side, dataset) ? `${entry.name} (edited)` : entry.name,
+    section: "Saved sets",
+    html: `<span class="opt-main"><strong>${escapeHtml(entry.name)}</strong><small>${escapeHtml(setSummary(entry.text))}</small></span><span class="set-actions"><button type="button" class="link-btn">Load</button><button type="button" class="link-btn" data-option-action="share">Share</button><button type="button" class="link-btn" data-option-action="delete">Delete</button></span>`,
+  }));
+  return [
+    { value: "", label: "Unsaved set", empty: true, html: `<span class="opt-main"><strong>Blank set</strong><small>Clears this Novaling's build</small></span>` },
+    ...(rows.length ? rows : [{ value: "__none", label: "", disabled: true, section: "Saved sets", html: `<span class="opt-main"><small>Nothing saved for this Novaling yet. Use Save Set at the bottom of the panel.</small></span>` }]),
+  ];
+}
+
 function panelTemplate(index) {
   const statRows = STAT_KEYS.map((key) => `
     <tr>
       <th scope="row">${STAT_LABELS[key]}</th>
       <td><input class="input num" type="number" inputmode="numeric" min="1" max="255" data-field="base.${key}" aria-label="${STAT_LABELS[key]} base stat" title="Base stat. Edit it to test a balance change." /></td>
       <td><input class="input num" type="number" inputmode="numeric" min="0" max="31" data-field="iv.${key}" placeholder="${DEFAULT_IV}" aria-label="${STAT_LABELS[key]} IV" /></td>
+      <td><input class="input num" type="number" inputmode="numeric" min="0" max="${MAX_STAT_EV}" step="4" data-field="ev.${key}" placeholder="0" aria-label="${STAT_LABELS[key]} EV" /></td>
       <td>${key === "hp" ? "" : `<div data-mount="boost.${key}"></div>`}</td>
       <td class="stat-value" data-out="stat.${key}"></td>
     </tr>`).join("");
@@ -390,6 +446,7 @@ function panelTemplate(index) {
       <button type="button" class="link-btn" data-action="reset-side">Clear</button>
     </header>
     <div data-mount="species" class="species-pick"></div>
+    <div class="field set-field"><span>Set</span><div data-mount="set"></div></div>
     <div class="species-meta" data-out="metawrap" hidden>
       <span data-out="typechips" class="chips"></span>
       <details class="edit-types">
@@ -407,9 +464,10 @@ function panelTemplate(index) {
     <h3 class="section-title">Stats</h3>
     <div class="level-row">
       <label class="inline-field"><span>Level</span><input class="input num" type="number" inputmode="numeric" min="1" max="100" data-field="level" aria-label="Novaling ${index + 1} level" /></label>
+      <span class="ev-total" data-out="evtotal"></span>
     </div>
     <table class="stats">
-      <thead><tr><th></th><th>Base</th><th>IV</th><th>Stage</th><th>Stat</th></tr></thead>
+      <thead><tr><th></th><th>Base</th><th>IV</th><th>EV</th><th>Stage</th><th>Stat</th></tr></thead>
       <tbody>${statRows}</tbody>
     </table>
 
@@ -435,7 +493,8 @@ function panelTemplate(index) {
       </div>
       <div class="bar" role="img" data-out="hpbarwrap"><i data-out="hpbar"></i></div>
       <p class="hint" data-out="surgetext" hidden></p>
-    </div>`;
+    </div>
+    <div class="card-foot"><button type="button" class="btn" data-action="export-set">Export</button><button type="button" class="btn" data-action="save-set">Save Set</button></div>`;
 }
 
 // --- Layout ---------------------------------------------------------------------------------
@@ -449,8 +508,7 @@ function buildLayout() {
     <section id="details" class="details" aria-label="Damage details" hidden></section>
     <div class="toolbar" id="toolbar">
       <div class="toolbar-group">
-        <div class="seg">${LEVEL_PRESETS.map((level) => `<button type="button" class="seg-btn" data-level="${level}" title="Set both Novalings to level ${level}">Level ${level}</button>`).join("")}<button type="button" class="seg-btn" data-custom-level title="Set both Novalings to any level">Custom</button></div>
-        <input class="input num custom-level" id="custom-level" type="number" inputmode="numeric" min="1" max="100" placeholder="1–100" aria-label="Level for both Novalings" hidden />
+        <div class="seg">${LEVEL_PRESETS.map((level) => `<button type="button" class="seg-btn" data-level="${level}" title="Set both Novalings to level ${level}">Level ${level}</button>`).join("")}</div>
       </div>
       <span class="toolbar-speed" hidden></span>
       <div class="toolbar-actions">
@@ -466,14 +524,25 @@ function buildLayout() {
     </div>
     <div class="cards" data-view-active="0">
       <section class="card" data-side="0" aria-label="Novaling 1">${panelTemplate(0)}</section>
+      <section class="io" id="io" aria-label="Import a set">
+        <h2>Import Set</h2>
+        <label class="field"><span>Paste a Showdown-format set</span><textarea class="input set-text" id="io-text" rows="11" spellcheck="false" autocomplete="off"></textarea></label>
+        <button type="button" class="btn btn-primary" data-io="import">Import</button>
+        <div class="io-status" id="io-status" role="status" hidden></div>
+      </section>
       <section class="card" data-side="1" aria-label="Novaling 2">${panelTemplate(1)}</section>
-    </div>`;
+    </div>
+    <dialog class="modal" id="modal"></dialog>`;
   refs = {
     hero: app.querySelector("#hero-body"),
     details: app.querySelector("#details"),
     toolbar: app.querySelector("#toolbar"),
     warning: app.querySelector("#warning"),
     cards: app.querySelector(".cards"),
+    io: app.querySelector("#io"),
+    ioText: app.querySelector("#io-text"),
+    ioStatus: app.querySelector("#io-status"),
+    modal: app.querySelector("#modal"),
     viewButtons: [...app.querySelectorAll("[data-view]")],
   };
   panels = [0, 1].map(buildPanel);
@@ -482,13 +551,12 @@ function buildLayout() {
     renderViewSwitch();
   }));
   refs.toolbar.addEventListener("click", onToolbarClick);
-  const customInput = refs.toolbar.querySelector("#custom-level");
-  customInput.addEventListener("input", () => setBothLevelsFromBox(customInput, false));
-  customInput.addEventListener("change", () => setBothLevelsFromBox(customInput, true));
-  customInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") customInput.blur();
-  });
   refs.hero.addEventListener("click", onCopyClick);
+  refs.io.querySelector("[data-io=\"import\"]").addEventListener("click", importFromText);
+  // A click on the dimmed area outside the box lands on the dialog itself.
+  refs.modal.addEventListener("click", (event) => {
+    if (event.target === refs.modal) refs.modal.close();
+  });
 }
 
 function buildPanel(index) {
@@ -503,6 +571,17 @@ function buildPanel(index) {
   };
 
   panel.pickers.species = mount("species", { label: `Novaling ${index + 1}`, placeholder: "Choose a Novaling", onSelect: (value) => changeSpecies(index, value) });
+  panel.pickers.set = mount("set", {
+    label: `Novaling ${index + 1} set`,
+    placeholder: "Unsaved set",
+    searchable: false,
+    onSelect: (value) => (value ? loadSavedSet(index, value) : clearBuild(index)),
+    onAction: (action, value) => {
+      const entry = findSavedSet(savedSets, speciesOf(side()).name, value);
+      if (action === "share") openShareModal(`Share ${entry.name}`, entry.text);
+      if (action === "delete") openDeleteModal(entry);
+    },
+  });
   panel.pickers.ability = mount("ability", { label: "Ability", onSelect: (value) => { side().ability = value; side().entryActive = false; render(); } });
   panel.pickers.item = mount("item", { label: "Item", onSelect: (value) => {
     side().item = value;
@@ -542,6 +621,17 @@ function buildPanel(index) {
       return;
     }
     const action = event.target.closest("[data-action]")?.dataset.action;
+    if (action === "save-set") {
+      openSaveModal(speciesOf(side()), formatSet(side(), dataset), (name) => {
+        side().setName = name;
+        render();
+      });
+      return;
+    }
+    if (action === "export-set") {
+      openShareModal(`Export ${speciesOf(side()).name}`, formatSet(side(), dataset));
+      return;
+    }
     if (action === "reset-side") state.sides[index] = newSide(state.defaultLevel);
     else if (action === "hp-third" && speciesOf(side())) side().hp = Math.max(1, Math.floor(maxHpOf(side()) / 3));
     else return;
@@ -555,20 +645,34 @@ function buildPanel(index) {
 function changeSpecies(index, value) {
   const side = state.sides[index];
   if (value === side.species) return;
-  // A new Novaling starts with moves, ability and item at None. Level, IVs and stages stay.
-  Object.assign(side, {
-    species: value,
-    base: { hp: null, attack: null, defense: null, speed: null },
-    types: null,
-    ability: "",
-    item: "none",
-    typeBoost: "",
-    hp: null,
-    entryActive: false,
-    status: "none",
-    moves: [newMoveSlot(), newMoveSlot(), newMoveSlot(), newMoveSlot()],
-  });
+  // A new Novaling starts with moves, ability, item and EVs at None. Level, IVs and stages stay.
+  const { base, types, ability, item, typeBoost, hp, entryActive, status, moves, evs, setName } = newSide();
+  Object.assign(side, { species: value, base, types, ability, item, typeBoost, hp, entryActive, status, moves, evs, setName });
   render({ forceInputs: true });
+}
+
+// The Blank set: everything but the Novaling and its level goes back to the start.
+function clearBuild(index) {
+  const { species, level } = state.sides[index];
+  state.sides[index] = { ...newSide(level), species };
+  render({ forceInputs: true });
+}
+
+// Battle conditions aren't part of a set, so a loaded set always starts healthy with no stages.
+function applySet(index, set, setName) {
+  const { level } = state.sides[index];
+  state.sides[index] = { ...newSide(level), ...set, level: set.level ?? level, setName };
+  render({ forceInputs: true });
+}
+
+function loadSavedSet(index, name) {
+  const entry = findSavedSet(savedSets, speciesOf(state.sides[index]).name, name);
+  const { set, errors, warnings } = parseSet(entry.text, dataset);
+  if (set) applySet(index, set, entry.name);
+  // Only says anything if the game data has changed since the set was saved.
+  if (errors.length || warnings.length) {
+    setIoStatus(set ? "warn" : "bad", set ? `Loaded ${entry.name}, with changes:` : `Couldn't load ${entry.name}:`, [...errors, ...warnings]);
+  }
 }
 
 function setType(index, position, value) {
@@ -604,7 +708,7 @@ function onFieldInput(index, target, committed) {
   }
   const whole = parseWhole(target.value);
   const min = Number(target.min);
-  const max = Number(target.max || Infinity);
+  const max = group === "ev" ? evRoom(side.evs, key) : Number(target.max || Infinity);
   const blank = String(target.value).trim() === "";
   target.classList.toggle("is-invalid", !committed && !blank && (whole === null || whole < min || whole > max));
   // Blank clears the field back to its default. Out-of-range values clamp, and are written back on leaving the box.
@@ -614,6 +718,7 @@ function onFieldInput(index, target, committed) {
   if (group === "level") withHpRatioKept(side, () => { if (value !== null) side.level = value; });
   else if (group === "base") withHpRatioKept(side, () => { side.base[key] = value === speciesOf(side)?.[key] ? null : value; });
   else if (group === "iv") withHpRatioKept(side, () => { side.ivs[key] = value; });
+  else if (group === "ev") withHpRatioKept(side, () => { side.evs[key] = value; });
   else if (group === "hp") side.hp = value === null || value >= maxHpOf(side) ? null : value;
   else if (group === "hpPercent") side.hp = value === null || value >= 100 ? null : Math.max(1, Math.floor((maxHpOf(side) * value) / 100));
   else if (group === "move" && sub === "power") {
@@ -659,12 +764,20 @@ function renderPanel(index, forceInputs, computed) {
   out("role").classList.toggle("role-attacking", attacking);
 
   pickers.species.setValue(side.species);
+  pickers.set.setOptions(savedSetOptions(side));
+  pickers.set.setValue(side.setName);
+  pickers.set.setDisabled(!hasSpecies);
+  root.querySelector(`[data-action="save-set"]`).disabled = !hasSpecies;
+  root.querySelector(`[data-action="export-set"]`).disabled = !hasSpecies;
   out("metawrap").hidden = !hasSpecies;
   out("typechips").innerHTML = types.filter(Boolean).map(typeChip).join("");
   pickers.type1.setValue(types[0]);
   pickers.type2.setValue(types[1] || "");
 
   setInput(field("level"), side.level, forceInputs);
+  const totalEvs = evTotal(side.evs);
+  out("evtotal").textContent = `EVs ${totalEvs} / ${MAX_TOTAL_EV}`;
+  out("evtotal").classList.toggle("is-full", totalEvs >= MAX_TOTAL_EV);
   for (const key of STAT_KEYS) {
     const base = field(`base.${key}`);
     base.disabled = !hasSpecies;
@@ -673,6 +786,9 @@ function renderPanel(index, forceInputs, computed) {
     const iv = field(`iv.${key}`);
     iv.disabled = !hasSpecies;
     setInput(iv, side.ivs[key], forceInputs);
+    const ev = field(`ev.${key}`);
+    ev.disabled = !hasSpecies;
+    setInput(ev, side.evs[key], forceInputs);
     const valueOut = out(`stat.${key}`);
     if (!hasSpecies) {
       valueOut.textContent = "—";
@@ -914,19 +1030,10 @@ function renderResult(entry) {
 function renderToolbar() {
   // As on Showdown, the chosen button stays lit even if one side's level is then edited by hand.
   refs.toolbar.querySelectorAll("[data-level]").forEach((button) => {
-    const active = !customLevelOpen && state.defaultLevel === Number(button.dataset.level);
+    const active = state.defaultLevel === Number(button.dataset.level);
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", String(active));
   });
-  const customButton = refs.toolbar.querySelector("[data-custom-level]");
-  customButton.classList.toggle("is-active", customLevelOpen);
-  customButton.setAttribute("aria-pressed", String(customLevelOpen));
-  const customInput = refs.toolbar.querySelector("#custom-level");
-  customInput.hidden = !customLevelOpen;
-  if (document.activeElement !== customInput) {
-    customInput.value = LEVEL_PRESETS.includes(state.defaultLevel) ? "" : state.defaultLevel;
-    customInput.classList.remove("is-invalid");
-  }
 
   const speedOut = refs.toolbar.querySelector(".toolbar-speed");
   const ready = state.sides.every((side) => speciesOf(side));
@@ -937,6 +1044,30 @@ function renderToolbar() {
     const verdict = speeds[0] === speeds[1] ? "Speed tie" : `${escapeHtml(names[speeds[0] > speeds[1] ? 0 : 1])} moves first`;
     speedOut.innerHTML = `<strong>${verdict}</strong> <span class="muted">${speeds[0]} vs. ${speeds[1]} Speed</span>`;
   }
+}
+
+function renderIo() {
+  refs.ioStatus.hidden = !ioStatus;
+  refs.ioStatus.className = `io-status${ioStatus ? ` is-${ioStatus.kind}` : ""}`;
+  refs.ioStatus.innerHTML = ioStatus
+    ? `<p>${escapeHtml(ioStatus.message)}</p>${ioStatus.details.length ? `<ul>${ioStatus.details.map((detail) => `<li>${escapeHtml(detail)}</li>`).join("")}</ul>` : ""}`
+    : "";
+}
+
+function setIoStatus(kind, message, details = []) {
+  clearTimeout(ioStatusTimer);
+  ioStatus = { kind, message, details };
+  renderIo();
+}
+
+// Empties the box and shows a short message that soon goes away, ready for the next set.
+function finishImport(kind, message) {
+  refs.ioText.value = "";
+  setIoStatus(kind, message);
+  ioStatusTimer = setTimeout(() => {
+    ioStatus = null;
+    renderIo();
+  }, IO_MESSAGE_MS);
 }
 
 function renderViewSwitch() {
@@ -956,6 +1087,7 @@ function render({ forceInputs = false } = {}) {
   panels.forEach((_, index) => renderPanel(index, forceInputs, computed));
   renderResult(entry);
   renderToolbar();
+  renderIo();
   renderViewSwitch();
   refs.warning.hidden = !source.warning;
   refs.warning.textContent = source.warning;
@@ -971,32 +1103,134 @@ function onCopyClick(event) {
   navigator.clipboard.writeText(refs.hero.querySelector("#result-line").textContent).then(() => finish("Copied"), () => finish("Copy failed"));
 }
 
+// --- Import, export and saved sets ----------------------------------------------------------
+
+function importFromText() {
+  const { set, unread } = parseSet(refs.ioText.value, dataset);
+  if (!set || unread) {
+    finishImport("bad", "Formatting error");
+    return;
+  }
+  // An imported set belongs to neither side: once named, it's in the Set dropdown on both.
+  const monster = monsterById(set.species);
+  openSaveModal(monster, formatSet({ ...set, level: set.level ?? DEFAULT_LEVEL }, dataset), (name) => {
+    finishImport("good", "Successfully imported");
+    render();
+  });
+}
+
+function storeSavedSets(sets) {
+  writeSavedSets(browserStorage(), sets);
+  savedSets = sets;
+}
+
+function showModal(title, body) {
+  refs.modal.innerHTML = `<h2>${escapeHtml(title)}</h2>${body}`;
+  refs.modal.showModal();
+  return refs.modal;
+}
+
+function openSaveModal(monster, text, onSaved) {
+  const modal = showModal(`Save ${monster.name}'s set`, `
+    <form class="modal-form" novalidate>
+      <label class="field"><span>Set name</span><input class="input" name="set-name" maxlength="60" autocomplete="off" placeholder="Fast attacker" /></label>
+      <p class="modal-error" role="alert" hidden></p>
+      <div class="modal-actions">
+        <button type="button" class="btn" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>`);
+  const input = modal.querySelector("input");
+  const error = modal.querySelector(".modal-error");
+  const fail = (message) => {
+    error.textContent = message;
+    error.hidden = false;
+    input.classList.add("is-invalid");
+    input.focus();
+  };
+  input.addEventListener("input", () => {
+    error.hidden = true;
+    input.classList.remove("is-invalid");
+  });
+  modal.querySelector("[data-modal-close]").addEventListener("click", () => modal.close());
+  modal.querySelector("form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const name = input.value.trim();
+    if (!name) return fail("Give this set a name.");
+    if (findSavedSet(savedSets, monster.name, name)) return fail(`${monster.name} already has a set called "${name}". Choose another name so it isn't overwritten.`);
+    try {
+      storeSavedSets([...savedSets, { species: monster.name, name, text }]);
+    } catch {
+      return fail("This browser wouldn't save it. Its storage may be full or switched off.");
+    }
+    modal.close();
+    onSaved(name);
+  });
+  input.focus();
+}
+
+function openShareModal(title, text) {
+  const modal = showModal(title, `
+    <textarea class="input set-text" rows="${text.split("\n").length + 1}" readonly spellcheck="false" aria-label="Set text"></textarea>
+    <div class="modal-actions">
+      <button type="button" class="btn" data-modal-close>Close</button>
+      <button type="button" class="btn btn-primary" data-modal-copy>Copy to Clipboard</button>
+    </div>`);
+  const box = modal.querySelector("textarea");
+  const copy = modal.querySelector("[data-modal-copy]");
+  box.value = text;
+  modal.querySelector("[data-modal-close]").addEventListener("click", () => modal.close());
+  copy.addEventListener("click", () => {
+    const finish = (label) => {
+      copy.textContent = label;
+      setTimeout(() => { copy.textContent = "Copy to Clipboard"; }, 1400);
+    };
+    box.select();
+    // Browsers can refuse the clipboard API, such as on plain http. The text stays selected for the older command, or a manual copy.
+    (navigator.clipboard?.writeText(text) ?? Promise.reject()).then(
+      () => finish("Copied"),
+      () => finish(document.execCommand("copy") ? "Copied" : "Press Ctrl/Cmd + C"),
+    );
+  });
+  copy.focus();
+}
+
+function openDeleteModal(entry) {
+  const modal = showModal(`Delete ${entry.name}?`, `
+    <p class="hint">This removes the saved ${escapeHtml(entry.species)} set from this browser. It can't be undone.</p>
+    <p class="modal-error" role="alert" hidden></p>
+    <div class="modal-actions">
+      <button type="button" class="btn" data-modal-close>Cancel</button>
+      <button type="button" class="btn btn-primary" data-modal-delete>Delete</button>
+    </div>`);
+  modal.querySelector("[data-modal-close]").addEventListener("click", () => modal.close());
+  modal.querySelector("[data-modal-close]").focus();
+  modal.querySelector("[data-modal-delete]").addEventListener("click", () => {
+    try {
+      storeSavedSets(savedSets.filter((other) => other !== entry));
+    } catch {
+      const error = modal.querySelector(".modal-error");
+      error.textContent = "This browser wouldn't save the change. Its storage may be switched off.";
+      error.hidden = false;
+      return;
+    }
+    // A panel showing this set keeps its values, which are now simply unsaved.
+    for (const side of state.sides) {
+      if (side.setName === entry.name && speciesOf(side)?.name === entry.species) side.setName = "";
+    }
+    modal.close();
+    render();
+  });
+}
+
 function setBothLevels(level) {
   state.defaultLevel = level;
   for (const side of state.sides) withHpRatioKept(side, () => { side.level = level; });
 }
 
-// While typing, a blank or partial value waits; on leaving the box an out-of-range value is clamped to 1-100.
-function setBothLevelsFromBox(input, committed) {
-  const whole = parseWhole(input.value);
-  input.classList.toggle("is-invalid", !committed && input.value !== "" && (whole === null || whole < 1 || whole > 100));
-  if (whole === null) return;
-  const level = clamp(whole, 1, 100);
-  setBothLevels(level);
-  if (committed) input.value = level;
-  render({ forceInputs: true });
-}
-
 function onToolbarClick(event) {
-  if (event.target.closest("[data-custom-level]")) {
-    customLevelOpen = true;
-    render();
-    refs.toolbar.querySelector("#custom-level").focus();
-    return;
-  }
   const levelButton = event.target.closest("[data-level]");
   if (levelButton) {
-    customLevelOpen = false;
     setBothLevels(Number(levelButton.dataset.level));
     render({ forceInputs: true });
     return;
@@ -1009,7 +1243,6 @@ function onToolbarClick(event) {
     for (const side of state.sides) side.boosts = { attack: 0, defense: 0, speed: 0 };
   } else if (action === "reset") {
     state = initialState();
-    customLevelOpen = false;
   } else if (action === "reload") {
     load();
     return;
@@ -1061,7 +1294,10 @@ async function load() {
     restoreReloadButton();
     return;
   }
-  if (!state) state = initialState();
+  if (!state) {
+    state = initialState();
+    savedSets = readSavedSets(browserStorage());
+  }
   keepValidSelections();
   if (!document.querySelector(".cards")) buildLayout();
   panels.forEach((panel) => {
@@ -1082,5 +1318,12 @@ function restoreReloadButton() {
     button.textContent = "Reload data";
   }
 }
+
+// Keeps two open tabs of the calculator in step.
+addEventListener("storage", (event) => {
+  if (!state || !panels.length || !isSavedSetsKey(event.key)) return;
+  savedSets = readSavedSets(browserStorage());
+  render();
+});
 
 load();

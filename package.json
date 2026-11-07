@@ -4,6 +4,6 @@
   "type": "module",
   "scripts": {
     "build:data": "node scripts/build-data.mjs",
-    "test": "node --test tests/core.test.mjs"
+    "test": "node --test tests/core.test.mjs tests/sets.test.mjs"
   }
 }
